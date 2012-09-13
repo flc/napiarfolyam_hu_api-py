@@ -1,0 +1,3 @@
+import napiarfolyam_hu_api
+
+napiarfolyam_hu_api.get(bank="mnb", currency="usd")
