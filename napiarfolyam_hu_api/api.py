@@ -1,4 +1,7 @@
-import urllib2
+try:
+    import urllib2 as urllib
+except ImportError:
+    import urllib
 import datetime
 import logging
 from xml.dom import minidom
@@ -52,7 +55,7 @@ def get_data(bank=None, currency=None, date=None, date_end=None):
 
     try:
         document = minidom.parseString(response_content)
-    except Exception, e:
+    except Exception as e:
         raise ParseError("Couldn't parse the response. "
                         "The response was: {}".format(response_content))
 
