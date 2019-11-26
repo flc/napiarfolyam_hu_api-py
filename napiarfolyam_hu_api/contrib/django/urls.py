@@ -1,8 +1,7 @@
-from django.urls import path
+from rest_framework.routers import DefaultRouter
 
-from . import views
+from .views import CurrencyConverterView
 
-
-urlpatterns = [
-    path('', views.CurrencyConverterView.as_view(), name='currency_converter'),
-]
+router = DefaultRouter()
+router.register(r'', CurrencyConverterView, basename='currency_converter')
+urlpatterns = router.urls
