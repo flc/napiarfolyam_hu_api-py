@@ -2,6 +2,8 @@ import logging
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import viewsets
+from rest_framework.decorators import action
 
 from .exchange import *
 from .serializers import CurrencyConverterSerializer
@@ -10,10 +12,14 @@ from .serializers import CurrencyConverterSerializer
 logger = logging.getLogger(__name__)
 
 
-class CurrencyConverterView(APIView):
+class CurrencyConverterView(viewsets.ViewSet):
 
-    def get(self, request, format=None, **kwargs):
-        ser = CurrencyConverterSerializer(data=request.query_params)
+    def get_serializer(self):
+        ser = CurrencyConverterSerializer(data=self.request.query_params)
+        return ser
+
+    def list(self, request, format=None, **kwargs):
+        ser = self.get_serializer()
         ser.is_valid(raise_exception=True)
         data = ser.data
 
@@ -21,7 +27,7 @@ class CurrencyConverterView(APIView):
         from_currency = data['from_currency']
         to_currency = data.get('to_currency', None)
 
-        currencies = settings.CURRENCIES
+        currencies = list(settings.CURRENCIES)
 
         if to_currency:
             currencies = [to_currency]
@@ -57,3 +63,12 @@ class CurrencyConverterView(APIView):
             'conversions': convs,
             'exchange_rates': exchange_rates,
             })
+
+
+    # POST is required to add to methods, otherwise actions do not appear in response
+    @action(methods=['GET', 'POST'], detail=False)
+    def schema(self, request, **kwargs):
+        # import pdb; pdb.set_trace()
+        meta = self.metadata_class()
+        data = meta.determine_metadata(request, self)
+        return Response(data)
