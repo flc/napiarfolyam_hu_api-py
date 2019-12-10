@@ -77,3 +77,7 @@ def convert_currency(
     ):
     rate = get_exchange_rate(from_currency, to_currency, exchange_rate_data)
     return rate * value
+
+
+def refresh_exchange_rates():
+    return get_exchange_rate_data(cache_first=False)
