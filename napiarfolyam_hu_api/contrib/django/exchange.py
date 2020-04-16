@@ -32,7 +32,7 @@ def get_safe(func, cache_key, default):
         return default
     else:
         # cache forever
-        cache.set(cache_key, value, timeout=0)
+        cache.set(cache_key, value, timeout=None)
         return value
 
 
