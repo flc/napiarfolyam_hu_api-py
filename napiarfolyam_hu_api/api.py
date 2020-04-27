@@ -13,7 +13,7 @@ from .utils import convert_date, parse_item_element
 from .exceptions import InvalidParameterError, ParseError
 
 
-def get_data(bank=None, currency=None, date=None, date_end=None):
+def get_data(bank=None, currency=None, date=None, date_end=None, timeout=3):
     if bank is None and currency is None:
         raise InvalidParameterError("You have to specify either the 'bank' or "
                                     "'currency' parameter.")
@@ -50,7 +50,7 @@ def get_data(bank=None, currency=None, date=None, date_end=None):
     if date_end is not None:
         payload['datumend'] = convert_date(date_end)
 
-    response = requests.get(BASE_URL, params=payload)
+    response = requests.get(BASE_URL, params=payload, timeout=timeout)
     response_content = response.content
 
     try:
