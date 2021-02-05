@@ -65,3 +65,10 @@ def get_data(bank=None, currency=None, date=None, date_end=None, timeout=3):
 
 
 get = get_data
+
+
+def get_mnb(currency, date=None):
+    if currency.lower() == 'huf':
+        return 1.0
+    data = get_data(bank="mnb", currency=currency, date=date)
+    return float(data[0]['kozep'])

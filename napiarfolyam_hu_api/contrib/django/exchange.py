@@ -5,17 +5,10 @@ import logging
 from django.core.cache import cache
 from django.conf import settings
 
-import napiarfolyam_hu_api
+from napiarfolyam_hu_api import get_mnb
 
 
 logger = logging.getLogger(__name__)
-
-
-def get_mnb(currency):
-    if currency.lower() == 'huf':
-        return 1.0
-    data = napiarfolyam_hu_api.get(bank="mnb", currency=currency)
-    return float(data[0]['kozep'])
 
 
 def get_safe(func, cache_key, default):
@@ -81,3 +74,15 @@ def convert_currency(
 
 def refresh_exchange_rates():
     return get_exchange_rate_data(cache_first=False)
+
+
+def get_exchange_rate_data_for_date(date):
+    rates = {}
+    for c in settings.CURRENCIES:
+        c = c.lower()
+        rates[c] = get_mnb(currency=c, date=date)
+
+    data = {}
+    for c1, c2 in itertools.permutations(rates.keys(), 2):
+        data[(c1.upper(), c2.upper())] = rates[c1] / rates[c2]
+    return data
