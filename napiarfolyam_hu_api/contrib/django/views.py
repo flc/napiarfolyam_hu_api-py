@@ -65,10 +65,10 @@ class CurrencyConverterView(viewsets.ViewSet):
             })
 
 
-    # POST is required to add to methods, otherwise actions do not appear in response
-    @action(methods=['GET', 'POST'], detail=False)
-    def schema(self, request, **kwargs):
-        # import pdb; pdb.set_trace()
+    # POST is required to be added to methods, otherwise actions do not appear in response
+    @action(methods=['GET', 'POST'], detail=False, url_path='schema')
+    def get_schema(self, request, **kwargs):
+        # don't call this method "schema" because it collide with drf schema generation
         meta = self.metadata_class()
         data = meta.determine_metadata(request, self)
         return Response(data)
