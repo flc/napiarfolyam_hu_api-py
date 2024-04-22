@@ -1,6 +1,7 @@
 import itertools
 import functools
 import logging
+from decimal import Decimal
 
 from django.core.cache import cache
 from django.conf import settings
@@ -69,6 +70,8 @@ def convert_currency(
     value, from_currency, to_currency, exchange_rate_data=None
     ):
     rate = get_exchange_rate(from_currency, to_currency, exchange_rate_data)
+    if isinstance(value, Decimal):
+        rate = Decimal(rate)
     return rate * value
 
 
